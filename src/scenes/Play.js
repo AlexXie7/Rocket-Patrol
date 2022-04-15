@@ -10,9 +10,15 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        // load music
+        this.load.audio('bgm', './assets/EthernightClub.mp3')
     }
 
     create() {
+        // BGM
+        this.BGM = this.sound.add('bgm'); // add BGM
+        this.BGM.play();  // play sfx
+
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // place tile sprite
