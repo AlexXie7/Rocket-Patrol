@@ -7,7 +7,10 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('base', './assets/base.png');
+        this.load.image('parallax1', './assets/parallax1.png');
+        this.load.image('parallax2', './assets/parallax2.png');
+
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         // load music
@@ -22,7 +25,9 @@ class Play extends Phaser.Scene {
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.base = this.add.tileSprite(0, 0, 640, 480, 'base').setOrigin(0, 0);
+        this.parallax1 = this.add.tileSprite(0, 0, 640, 480, 'parallax1').setOrigin(0, 0);
+        this.parallax2 = this.add.tileSprite(0, 0, 640, 480, 'parallax2').setOrigin(0, 0);
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
@@ -51,6 +56,7 @@ class Play extends Phaser.Scene {
         });
         // initialize score
         this.p1Score = 0;
+        this.timeLeft = 7200;
 
         // display score
         let scoreConfig = {
@@ -66,8 +72,8 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft  = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-        this.scoreRight = this.add.text(game.config.width - borderUISize - borderPadding - 100, borderUISize + borderPadding*2, hiScore, scoreConfig);
-        
+        this.scoreRight = this.add.text(game.config.width - borderUISize - borderPadding - scoreConfig.fixedWidth, borderUISize + borderPadding*2, hiScore, scoreConfig);
+        this.timeMid    = this.add.text(game.config.width/2 - scoreConfig.fixedWidth/2, borderUISize + borderPadding*2, this.timeLeft, scoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -95,7 +101,16 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         } 
 
-        this.starfield.tilePositionX -= 4;
+        
+        //reduce displayed time
+        if (this.timeLeft > 0) {
+            this.timeLeft -= 1;
+            this.timeMid.text = Math.floor(this.timeLeft / 120);
+        }
+
+        this.base.tilePositionX -= 0.5;
+        this.parallax1.tilePositionX -= 2;
+        this.parallax2.tilePositionX -= 4;
         if(!this.gameOver) {
             this.p1Rocket.update();
             this.ship01.update();               // update spaceships (x3)
