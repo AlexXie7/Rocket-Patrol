@@ -10,9 +10,10 @@ class Play extends Phaser.Scene {
         this.load.image('base', './assets/base.png');
         this.load.image('parallax1', './assets/parallax1.png');
         this.load.image('parallax2', './assets/parallax2.png');
-
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        // load explosion particle
+        this.load.image('red', './assets/red.png');
         // load music
         this.load.audio('bgm', './assets/EthernightClub.mp3')
     }
@@ -41,6 +42,17 @@ class Play extends Phaser.Scene {
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+
+        //explosion particles
+        this.emitter0 = this.add.particles('red').createEmitter({
+            speed: { min: -800, max: 800 },
+            angle: { min: 0, max: 360 },
+            scale: { start: 0.5, end: 0 },
+            blendMode: 'SCREEN',
+            //active: false,
+            lifespan: 600,
+            gravityY: 800
+        });
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -150,6 +162,12 @@ class Play extends Phaser.Scene {
         ship.alpha = 0;
         // create explosion sprite at ship's position
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+
+        // Particle emitter
+        this.emitter0.setPosition(ship.x, ship.y);
+        this.emitter0.explode();
+
+        
         boom.anims.play('explode');             // play explode animation
         boom.on('animationcomplete', () => {    // callback after anim completes
           ship.reset();                         // reset ship position
