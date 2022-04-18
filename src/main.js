@@ -16,6 +16,9 @@
  * Randomize each spaceship's movement direction at the start of each play (5)
  * Create new artwork for all of the in-game assets (rocket, spaceships, explosion) (20)
  * Total Points: 110/100 
+ * 
+ * All Art Assets from Daphne Cheng!
+ * Music is Ethernight Club by Kevin Macleod
  **/
 
 
